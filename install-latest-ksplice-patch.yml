@@ -1,0 +1,34 @@
+---
+- hosts: DEV1
+  become: yes
+  become_method: sudo
+
+  tasks:
+  - name: Creates directory
+    file: path=/tmp/ksplice-patch-new state=directory
+
+  - name: Extract Patch into /tmp/ksplice-patch-new/
+    unarchive:
+      src: /stage/redhat/software/exa/exalogic/patches/p27187159_20620_Linux-x86-64.zip
+      dest: /tmp/ksplice-patch-new/
+
+  - name: Execute the patch script ebi_patch.sh
+    shell: ./ebi_patch.sh 
+    args:
+      chdir: /tmp/ksplice-patch-new/27459436/
+      executable: /bin/bash
+
+
+  - name: Configure the KSplice patch to persist after reboot
+    lineinfile:
+      path: /etc/rc.local
+      line: '/opt/patches/auto_apply_ksplice.sh'
+
+  - name: Verification if ksplice is applied
+    command: /usr/lib/uptrack/ksplice-view
+    register: ksplice_result
+
+  - debug: var=shell_result.stdout_lines
+
+  - name: validate if patch is applied
+    command: imagehistory

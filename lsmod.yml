@@ -1,0 +1,10 @@
+---
+- hosts: elf1
+  become: yes
+  become_method: sudo 
+
+
+  tasks:
+
+  - name: Execute the patch script ebi_patch.sh
+    shell: lsmod

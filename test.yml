@@ -1,0 +1,7 @@
+---
+ - name: test the ansible
+   hosts: dev-elf21
+   gather_facts: yes
+   tasks: 
+      - name: test the file 
+        copy: src=/tmp/aa dest=/tmp/

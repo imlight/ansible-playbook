@@ -1,0 +1,30 @@
+---
+- hosts: DEV
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+#  - name: Execute undo_ksplice_19hwvryt.sh script 
+#    shell: ./undo_ksplice_19hwvryt.sh
+#    args:
+#      chdir: /opt/patches/2.6.39-400.294.1.el6uek.x86_64
+#      executable: /bin/bash
+
+  - name: Verify ksplice view 
+    shell: /usr/lib/uptrack/ksplice-view
+
+  - name: Clean artifact path
+    file:
+      state: absent
+      path: "/opt/patches/2.6.39-400.294.1.el6uek.x86_64"
+
+  - name: clear rc.local 
+    lineinfile:
+      dest: /etc/rc.local
+      regexp: "ksplice"
+      state: absent
+
+  - name: Restore Image history
+    shell: cp /var/tmp/el_conf.bak27459436/.image_history.27459436 /var/log/init-exalogic-node/.image_history
+

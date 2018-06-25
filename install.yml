@@ -1,0 +1,14 @@
+---
+- hosts: all
+  sudo: true
+  vars:
+     packages: [ 'vim', 'git', 'curl', 'httpd' ]
+  tasks:
+  - name: Install Package
+    apt: name={{ item }} state=latest
+    with_items: packages
+---
+- hosts: all
+  tasks:
+     - name: Install httpd Package
+       apt: name=httpd state=latest
